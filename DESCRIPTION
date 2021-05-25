@@ -1,0 +1,17 @@
+Package: RepSeqData
+Title: Aligned TCR sequences using MiXCR and rTCR
+Version: 0.1
+Authors@R: 
+    person(given = "Phuong",
+           family = "PHAM",
+           role = c("aut", "cre"),
+           email = "ph.phuong@gmail.com",
+           comment = c(ORCID = "YOUR-ORCID-ID"))
+Description: Raw aligned TCR data by MiXCR and rTCR. To be used as example data set for the package RepSeq.
+License: GPL (>= 3)
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
+Depends: 
+    R (>= 2.10)

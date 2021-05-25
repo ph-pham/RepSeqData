@@ -1,0 +1,1284 @@
+out2
+ord <- c(paste0("AVAL_", LABEL), paste0("NORMMIN_", LABEL), paste0("NORMMAX_", LABEL))
+ord <- c(paste0("AVAL_", out$LABEL), paste0("NORMMIN_", out$LABEL), paste0("NORMMAX_", out$LABEL))
+ord
+ord <- c(paste0("AVAL_", order(out$LABEL)), paste0("NORMMIN_", order(out$LABEL)), paste0("NORMMAX_", order(out$LABEL)))
+head(ord)
+out
+out$LABEL
+lab <- sort(out$LABEL)
+lab
+adbio
+adbio[, AVISITC := ifelse(AVISITN>0 & AVISITN < 10, AVISIT, paste("W0", AVISITN))]
+adbio
+adbio[, AVISITC := ifelse(AVISITN > 0 | AVISITN < 10, AVISIT, paste0("W0", AVISITN))]
+adbio
+adbio[, AVISITC := ifelse(AVISITN < 10, AVISIT, paste0("W0", AVISITN))]
+adbio
+adbio[, AVISITC := ifelse(length(AVISIT) < 3 & AVISIT != "RD", paste0("W0", AVISITN), AVISIT)]
+adbio
+adbio[, AVISITC := ifelse(length(AVISIT) < 3 & AVISIT != "RD", paste0("W0", AVISITN), AVISIT), by=.N]
+adbio
+adbio[, AVISITC := AVISIT][length(AVISIT) == 2, AVISITC := ifelse(AVISIT != "RD", paste0("W0", AVISITN), AVISIT)]
+adbio
+adbio <- rbindlist(lapply(file.path(input, export, c("INCLUSION_ANSI.csv", "RANDOV_ANSI.csv", l1)), combineBio))#
+adbio <- adbio[!(PARAMCD=="OC_S")]#
+labtest <- fread(file.path(input, "labtest.txt"), na.strings="")#
+labtest[, ID:=rowid(ROUTINELAB)]#
+labtest[, ID:=ifelse(ID<10, paste0("0", ID), ID)]#
+adbio <- merge(adbio, labtest, by="PARAMCD", all.x=TRUE)#
+adbio <- merge(adbio, core, by="SUBJECT_REF", all.x=TRUE)#
+adbio <- adbio[, .(COUNTRY_ID, SITE_ID, SUBJECT_REF, PSTATUS, VISIT_D, AVISIT_D, AVISIT, AVISITN, ID, PARAMCD, PARAM, ROUTINELAB, AVAL, AVALC, NORMMIN, NORMMINC, NORMMAX, NORMMAXC, CS, CE, INC_D, RANDO_D, RANDO_NUM, RANDO_STRATE, PRESUMD_D, DOCD_D, EOS, EOS_REASON, EOS_REASON_S, INCLU, Group)]#
+adbio[, LABEL:=paste(ID, PARAMCD, AVISIT, sep="_")]#
+adbio[, ID2:=paste(ID, PARAMCD, sep="_")]#
+adbio[, AVISITC := AVISIT][length(AVISIT) == 2, AVISITC := ifelse(AVISIT != "RD", paste0("W0", AVISITN), AVISIT)]
+adbio
+adbio$AVISITC
+adbio[length(AVISITC) == 2, AVISITC := ifelse(AVISIT != "RD", paste0("W0", AVISITN), AVISIT)]
+adbio
+adbio[nchar(AVISITC) == 2, AVISITC := ifelse(AVISIT != "RD", paste0("W0", AVISITN), AVISIT)]
+adbio
+adbio[, LABEL:=paste(ID, PARAMCD, AVISITC, sep="_")]
+adbio
+lab <- sort(out$LABEL)
+lab
+out <- adbio[ROUTINELAB==eval(lab)]
+lab
+adbio
+lab <- "Biochemistry"
+out <- adbio[ROUTINELAB==eval(lab)]
+out
+out2 <- dcast(out, COUNTRY_ID+SITE_ID+SUBJECT_REF~LABEL, value.var=c("AVAL", "NORMMIN", "NORMMAX"))
+label <- sort(out$LABEL)
+label
+ord <- c(paste0("AVAL_", label), paste0("NORMMIN_", label), paste0("NORMMAX_", label))
+ord
+out2 <- dcast(out, COUNTRY_ID+SITE_ID+SUBJECT_REF~LABEL, value.var=c("AVAL", "NORMMIN", "NORMMAX"))
+dim(out2)
+head(out2)
+label <- sort(unique(out$LABEL))#
+ord <- c(paste0("AVAL_", label), paste0("NORMMIN_", label), paste0("NORMMAX_", label))
+length(ord)
+dim(out2)
+?setcolorder
+setcolorder(out2, c("COUNTRY_ID", "SITE_ID", "SUBJECT_REF", ord))
+out2
+ord <- sort(c(paste0("AVAL_", label), paste0("NORMMIN_", label), paste0("NORMMAX_", label)))
+head(ord)
+ord <- paste0(c("AVAL_", "NORMMIN_", "NORMMAX_") , label)
+head(ord)
+setcolorder(out2, c("COUNTRY_ID", "SITE_ID", "SUBJECT_REF", ord))
+out2[, 1:10]
+out
+out <- out[order(ID, AVISIT)]
+out
+label <- unique(out$LABEL)#
+        ord <- paste0(c("AVAL_", "NORMMIN_", "NORMMAX_") , label)#
+        setcolorder(out2, c("COUNTRY_ID", "SITE_ID", "SUBJECT_REF", ord))
+out2[, 1:20]
+out <- adbio[ROUTINELAB==eval(lab)]#
+    out <- out[order(ID, AVISIT)]
+out
+head(out$LABEL)
+head(unique(out$LABEL))
+out <- out[order(AVISIT, ID)]
+out
+label <- unique(out$LABEL)#
+        ord <- paste0(c("AVAL_", "NORMMIN_", "NORMMAX_") , label)#
+        setcolorder(out2, c("COUNTRY_ID", "SITE_ID", "SUBJECT_REF", ord))
+out2[, 1:20]
+ord <- apply(expand.grid(c("AVAL", "NORMMIN", "NORMMAX"), label), 1, paste, collapse="_")
+head(ord)
+setcolorder(out2, c("COUNTRY_ID", "SITE_ID", "SUBJECT_REF", ord))
+out2[, 1:20]
+adbio
+adbio[, unique(ROUTINELAB)]
+for (lab in unique(adbio$ROUTINELAB)) {#
+    out <- adbio[ROUTINELAB==eval(lab)]#
+    out <- out[order(AVISIT, ID)]#
+    if (nrow(out)>0) {#
+        #out2 <- dcast(out, COUNTRY_ID+SITE_ID+SUBJECT_REF+AVISIT~PARAMCD, value.var=c("AVAL", "NORMMIN", "NORMMAX", "CS"))#
+        out2 <- dcast(out, COUNTRY_ID+SITE_ID+SUBJECT_REF~LABEL, value.var=c("AVAL", "NORMMIN", "NORMMAX"))#
+        label <- unique(out$LABEL)#
+        ord <- apply(expand.grid(c("AVAL", "NORMMIN", "NORMMAX"), label), 1, paste, collapse="_")      #
+        setcolorder(out2, c("COUNTRY_ID", "SITE_ID", "SUBJECT_REF", ord))#
+        fwrite(out2, file.path(tab.output, paste0("listing_labtest_wide_", lab,".xls")), sep="\t")#
+        }#
+    fwrite(out, file.path(tab.output, paste0("listing_labtest_", lab,".xls")), sep="\t")#
+#
+}
+out
+out <- out[order(ID, AVISIT)]
+out
+out <- out[order(AVISIT, ID)]
+out
+out <- out[order(ID, AVISIT)]
+out
+out <- out[order(ID, AVISITN)]
+out
+out <- out[order(AVISITN, ID)]
+out
+lab
+adbio
+adbio <- rbindlist(lapply(file.path(input, export, c("INCLUSION_ANSI.csv", "RANDOV_ANSI.csv", l1)), combineBio))#
+adbio <- adbio[!(PARAMCD=="OC_S")]#
+labtest <- fread(file.path(input, "labtest.txt"), na.strings="")#
+labtest[, ID:=rowid(ROUTINELAB)]#
+labtest[, ID:=ifelse(ID<10, paste0("0", ID), ID)]#
+adbio <- merge(adbio, labtest, by="PARAMCD", all.x=TRUE)#
+adbio <- merge(adbio, core, by="SUBJECT_REF", all.x=TRUE)#
+adbio <- adbio[, .(COUNTRY_ID, SITE_ID, SUBJECT_REF, PSTATUS, VISIT_D, AVISIT_D, AVISIT, AVISITN, ID, PARAMCD, PARAM, ROUTINELAB, AVAL, AVALC, NORMMIN, NORMMINC, NORMMAX, NORMMAXC, CS, CE, INC_D, RANDO_D, RANDO_NUM, RANDO_STRATE, PRESUMD_D, DOCD_D, EOS, EOS_REASON, EOS_REASON_S, INCLU, Group)]#
+adbio[, AVISITC := AVISIT]#
+adbio[nchar(AVISITC) == 2, AVISITC := ifelse(AVISIT != "RD", paste0("W0", AVISITN), AVISIT)]#
+adbio[, LABEL:=paste(ID, PARAMCD, AVISITC, sep="_")]
+adbio
+lab <- "Biochemistry"
+out <- adbio[ROUTINELAB==eval(lab)]
+out
+out <- out[order(AVISIT, ID)]
+out
+out2 <- dcast(out, COUNTRY_ID+SITE_ID+SUBJECT_REF~LABEL, value.var=c("AVAL", "NORMMIN", "NORMMAX"))#
+        label <- unique(out$LABEL)#
+        ord <- apply(expand.grid(c("AVAL", "NORMMIN", "NORMMAX"), label), 1, paste, collapse="_")      #
+        setcolorder(out2, c("COUNTRY_ID", "SITE_ID", "SUBJECT_REF", ord))
+out2[,1:20]
+out
+out <- out[order(SUBJECT_REF, ID, AVISIT)]
+out
+out <- out[order(SUBJECT_REF, AVISIT, ID)]
+out
+# write separate labtest to file#
+for (lab in unique(adbio$ROUTINELAB)) {#
+    out <- adbio[ROUTINELAB==eval(lab)]#
+    out <- out[order(AVISIT, ID)]#
+    if (nrow(out)>0) {#
+        #out2 <- dcast(out, COUNTRY_ID+SITE_ID+SUBJECT_REF+AVISIT~PARAMCD, value.var=c("AVAL", "NORMMIN", "NORMMAX", "CS"))#
+        out2 <- dcast(out, COUNTRY_ID+SITE_ID+SUBJECT_REF~LABEL, value.var=c("AVAL", "NORMMIN", "NORMMAX"))#
+        label <- unique(out$LABEL)#
+        ord <- apply(expand.grid(c("AVAL", "NORMMIN", "NORMMAX"), label), 1, paste, collapse="_")      #
+        setcolorder(out2, c("COUNTRY_ID", "SITE_ID", "SUBJECT_REF", ord))#
+        fwrite(out2, file.path(tab.output, paste0("listing_labtest_wide_", lab,".xls")), sep="\t")#
+        }#
+    out <- out[order(SUBJECT_REF, AVISIT, ID)]#
+    fwrite(out, file.path(tab.output, paste0("listing_labtest_", lab,".xls")), sep="\t")#
+}
+q()
+library(scRNAseq)
+BiocManager::install("scRNASeq")
+library(tximport)
+citation("tximport")
+?tximport
+?DESeq2
+library(DESeq2)
+?DESeq2
+libray(ade4)
+library(ade4)
+dudi.pca
+?dudi.pca
+library(RDAVIDWebService)
+?RDAVIDWebService
+citation("RDAVIDWebService")
+library(EGSEA)
+?egsea
+library(pheatap)
+library(pheatmap)
+?pheatmap
+library(ggplot2)
+?ggplot
+BiocManager::install("scRNAseq")
+q()
+#-------- Libraries -------##
+library(multtest)#
+library(DropletUtils)#
+library(Seurat)#
+library(scico)#
+library(ggpointdensity)#
+library(Matrix)#
+library(tidyverse)#
+library(scales)
+# #
+read_count_output <- function(dir, name) {#
+  dir <- normalizePath(dir, mustWork = TRUE)#
+  m <- readMM(paste0(dir, "/", name, ".mtx"))#
+  m <- Matrix::t(m)#
+  m <- as(m, "dgCMatrix")#
+  # The matrix read has cells in rows#
+  ge <- ".genes.txt"#
+  genes <- readLines(file(paste0(dir, "/", name, ge)))#
+  barcodes <- readLines(file(paste0(dir, "/", name, ".barcodes.txt")))#
+  colnames(m) <- barcodes#
+  rownames(m) <- genes#
+  return(m)#
+}#
+#
+#' Knee plot for filtering empty droplets#
+#' #
+#' Visualizes the inflection point to filter empty droplets. This function plots #
+#' different datasets with a different color. Facets can be added after calling#
+#' this function with `facet_*` functions. Will be added to the next release#
+#' version of BUSpaRse.#
+#' #
+#' @param bc_rank A `DataFrame` output from `DropletUtil::barcodeRanks`.#
+#' @return A ggplot2 object.#
+knee_plot <- function(bc_rank) {#
+  knee_plt <- tibble(rank = bc_rank[["rank"]],#
+                     total = bc_rank[["total"]]) %>% #
+    distinct() %>% #
+    dplyr::filter(total > 0)#
+  annot <- tibble(inflection = metadata(bc_rank)[["inflection"]],#
+                  rank_cutoff = max(bc_rank$rank[bc_rank$total > metadata(bc_rank)[["inflection"]]]))#
+  p <- ggplot(knee_plt, aes(total, rank)) +#
+    geom_line() +#
+    geom_hline(aes(yintercept = rank_cutoff), data = annot, linetype = 2) +#
+    geom_vline(aes(xintercept = inflection), data = annot, linetype = 2) +#
+    scale_x_log10() +#
+    scale_y_log10() +#
+    annotation_logticks() +#
+    labs(y = "Rank", x = "Total UMIs")#
+  return(p)#
+}#
+#
+#-------- Path ------------##
+project <- "~/PP/RNASeq/VQ4"#
+input <- file.path(project, "data")#
+output.base <- file.path(project, "output")#
+output <- file.path(output.base, "analyse_202012282143")#
+img.output <- file.path(output, "figures")#
+de.output <- file.path(output, "DE")#
+data.output <- file.path(output, "data")#
+#
+if (!file.exists(img.output)) dir.create(img.output, recursive=TRUE)#
+if (!file.exists(data.output)) dir.create(data.output, recursive=TRUE)#
+if (!file.exists(de.output)) dir.create(de.output, recursive=TRUE)
+res_mat <- read_count_output(file.path(input, "kbsample", "sample1", "counts_unfiltered"), name = "cells_x_genes")
+dim(res_mat)
+tr2g <- read.table(file.path(input, "transcripts_to_genes.txt"), sep="\t", col.names= c("transcript", "gene", "gene_symbol", "V4", "V5", "V6", "V7", "V8")) %>% select(!c("transcript", "V4", "V5", "V6", "V7", "V8")) %>% distinct()
+tot_counts <- Matrix::colSums(res_mat)#
+summary(tot_counts)
+length(tot_ocunts)
+length(tot_counts)
+bc_rank <- barcodeRanks(res_mat, lower = 10)
+options(repr.plot.width=9, repr.plot.height=6)#
+knee_plot(bc_rank)
+metadata(bc_rank)$inflection
+q()
+#--------- options ----------##
+options(java.parameters = "-Xmx2048m")#
+#
+#--------- library ---------##
+library(haven) # read/write sas tables#
+library(data.table) # data organiser#
+library(compareGroups) # comparison tables#
+library(knitr) # table#
+library(rmdformats) # rmarkdown output style#
+library(kableExtra) # extra for kable#
+library(XML)#
+library(finalfit) ##
+library(labelled) ##
+library(missMDA) ##
+library(ade4) ##
+library(factoextra) ##
+library(emmeans) ##
+library(survminer) ##
+#
+getDesc <- function(x) {#
+    switch(class(x)[1], #
+    # numeric#
+    numeric = { out <-  c(sum(is.na(x)), fivenum(x)) },#
+    # character#
+    character = { out <- unique(x) },#
+    # hms#
+    hms = { out <- c(sum(is.na(x)), fivenum(x)) },#
+    # Date#
+    Date = { out <- c(sum(is.na(x)), length(x)) },#
+    stop("Enter something that switches me!")#
+    )#
+    return(out)#
+}#
+#
+dowle <- function(DT) {#
+  dat <- copy(DT)#
+  for (i in names(dat)) {#
+    dat[is.na(get(i)), (i):=0]#
+  }#
+  return(dat)#
+}#
+#
+source("~/PP/ClinicAssay/LUPIL2/prog/summary_functions.R")#
+#
+#------------ project ------------##
+#input <- "~/Documents/SASUniversityEdition/myfolders/LUPIL2V17/data"#
+input <- "~/Documents/SASUniversityEdition/myfolders/LUPIL2/uncompresdata"#
+project <- "~/PP/ClinicAssay/LUPIL2PAPER"#
+limathon <- file.path(project, "data", "export", "exp20190522")#
+#output.base <- file.path(project, "output")#
+#output.base <- file.path(project, "output/analyse_201906251633")#
+#output.base <- file.path(project, "output/analyse_201908231804")#
+#output.base <- file.path(project, "output/analyse_201909031842")#
+#output.base <- file.path(project, "output/analyse_201912021614")#
+output.base <- file.path(project, "output/analyse_202101150951")#
+Rmd.dir <- file.path(project, "Rmd")#
+#
+#------------ list data -----------##
+l <- list.files(input, ".sas7bdat", full.name=TRUE)#
+#
+#------------ load supp -----------##
+trtwithdraw <- read.table(file.path(project, "data", "lupil2_withdraw_visits.txt"), sep="\t", header=TRUE)#
+#
+#------------ load data -----------##
+responders <- read_sas(l[grep("responder.sas7bdat", l)])#
+adef <- read_sas(l[grep("adef.sas7bdat", l)])#
+adqssl <- read_sas(l[grep("adqssl.sas7bdat", l)]) #
+adcmster <- read_sas(l[grep("adcmster.sas7bdat", l)])#
+dcm <- read_sas(l[grep("d_cm.sas7bdat", l)])#
+antids <- read_sas(l[grep("adlbantdsdna.sas7bdat", l)])#
+adig <- read_sas(l[grep("adlbig.sas7bdat", l)])#
+adtreg <- read_sas(l[grep("adlbtreg.sas7bdat", l)])#
+adqsbl <- read_sas(l[grep("adqsbl.sas7bdat", l)])#
+adsl <- read_sas(l[grep("adsl.sas7bdat", l)])#
+adqfss <- read_sas(l[grep("adqsfss.sas7bdat", l)]) # #
+adlbct <- read_sas(l[grep("adlbct.sas7bdat", l)]) # lab test#
+adqol <- read_sas(l[grep("d_qsqol.sas7bdat", l)]) # quality of life#
+dsv <- read_sas(l[grep("d_sv.sas7bdat", l)]) # visite date#
+setDT(advs <- read_sas(l[grep("advs.sas7bdat", l)]))#
+setDT(dmh <- read_sas(l[grep("d_mh.sas7bdat", l)]))#
+#
+# convert to data.table#
+setDT(responders)#
+setDT(adef)#
+setDT(adqssl)#
+setDT(adcmster)#
+setDT(dcm)#
+setDT(antids)#
+setDT(adig)#
+setDT(adtreg)#
+setDT(adqsbl)#
+setDT(adsl)#
+setDT(adqfss)#
+setDT(adlbct)#
+setDT(adqol)#
+setDT(dsv)#
+#
+#----------------- medial history -----------------##
+medhis <- fread(file.path(project, "data", "lupil2_SLE_Disease_history.txt"), sep="\t")#
+medhis <- medhis[, .(SUBJID, DIAGMETH, OTHER.AUTO, SLE.FHIST, OTHER.AUTO.FHIST)]#
+Lupus <- dmh[ITTFL=="Y" & MHDECOD =="Lupus nephritis", c("SUBJID")]#
+Lupus[, Lupusnephritis:=factor("Yes")]#
+#
+#----------------------- FLARE -----------------##
+flare <- adqssl[PARAMCD=="FLSC" & AVISITN %in% c(9, 13, 17), .(NFLARE=sum(AVALC %in% c("Mild or Moderate", "Severe"))), by="SUBJID"]#
+flare[, FLARE:=ifelse(NFLARE>0, "Yes", "No")]#
+flare$FLARE <- factor(flare$FLARE)#
+#
+# Week 24#
+flareV29 <- adqssl[AVISITN == 29 & PARAMCD == "FLSC", .(FLAREW24=ifelse(AVALC %in% c("Mild or Moderate", "Severe"), 1, 0)), by=SUBJID]#
+#
+# visit date#
+lvisitdate <- dsv[VISITNUM %in% 1:17 & ITTFL=="Y", .(LASTVISITDATE=max(SVSTDT, na.rm=TRUE)), by=SUBJID]#
+lvisit <- dsv[(VISITNUM %in% 1:17 & ITTFL=="Y" & SVSTDT==TR01EDT) | (SUBJID=="008-001-007" & VISITNUM==12), .(SUBJID, VISIT, TRTSDT, TR01EDT)]#
+lvisit <- merge(lvisit, lvisitdate, by="SUBJID")#
+#
+# flare extract#
+#fl <- sfi[AVISIT %in% c("V09", "V13", "V17"), .(AVISIT=AVISIT[which(SFI == "MOD")[1]], FLDATE=ADATE[which(SFI == "MOD")[1]]), by="SUBJID"]#
+fl <- adqssl[AVISITN %in% c(9, 13, 17) & PARAMCD == "FLSC", #
+            .(AVISIT=AVISIT[which(AVALC %in% c("Mild or Moderate", "Severe"))[1]], #
+            FLDATE=ADT[which(AVALC %in% c("Mild or Moderate", "Severe"))[1]]), #
+            by="SUBJID"]#
+fl[, flstatus:=ifelse(is.na(FLDATE), 0, 1)]#
+#lct <- Sys.getlocale("LC_TIME")#
+#Sys.setlocale("LC_TIME", "C")#
+fl[, FLDATE:=as.Date(FLDATE, format="%Y-%m-%d")]#
+#Sys.setlocale("LC_TIME", lct)#
+#
+flaretime <- merge(lvisit, fl, by="SUBJID")#
+flaretime[, ENDPOINT:=min(TR01EDT, LASTVISITDATE, FLDATE, na.rm=TRUE), by="SUBJID"]#
+flaretime[, `:=`(status=flstatus,  time=ENDPOINT-TRTSDT+1)]#
+flaretime[!is.na(FLDATE), status:=ifelse(FLDATE>TR01EDT, 0, 1)] #
+flaretime[, FLENDPOINT:=LASTVISITDATE]#
+flaretime[flstatus == 1, FLENDPOINT:=FLDATE]#
+flaretime[,fltime:=FLENDPOINT-TRTSDT]#
+#
+# flare#
+flare <- merge(flare, flaretime[,c("SUBJID", "status", "time", "flstatus", "fltime")], by="SUBJID")#
+#
+#------------------------------ baseline ------------------##
+varkeep <- c("STUDYID", "USUBJID", "SUBJID", "PSUBJID", "SITEID", "FASFL", "SAFFL", "SAFP2FL", "ITTFL", "PPROTFL", "RANDFL", "ARM", "ARMN", "AGE", "SEX", "SEXN", "AEYN", "CMYN", "MHYN", "PRYN", "DURDHXN", "TFAILDT", "STERGR1", "STERGR1N", "SELGR1", "SELGR1N", "GEOGR1", "GEOGR1n", "COMGR1", "COMGR1n", "DSDGR1", "DSDGR1n", "AGEGR1", "AGEGR1n", "SEXGR1", "SEXGR1n", "BMIGR1", "BMIGR1n", "ETHGR1", "ETHGR1n")#
+baseline <- adsl[ITTFL=="Y", ..varkeep]#
+colnames(baseline) <- c("STUDYID", "USUBJID", "SUBJID", "PSUBJID", "SITEID", "FASFL", "SAFFL", "SAFP2FL", "ITTFL", "PPROTFL", "RANDFL", "ARM", "ARMN", "AGE", "SEX", "SEXN", "AEYN", "CMYN", "MHYN", "PRYN", "DURDHXN", "TFAILDT", "STERGR1", "STERGR1N", "SELGR1", "SELGR1N", "GEOGR1", "GEOGR1N", "COMGR1", "COMGR1N", "DSDGR1", "DSDGR1N", "AGEGR1", "AGEGR1N", "SEXGR1", "SEXGR1N", "BMIGR1", "BMIGR1N", "ETHGR1", "ETHGR1N")#
+#
+cat.var <- c("ARM", "SEX", "AEYN", "CMYN", "MHYN", "PRYN", "STERGR1", "SELGR1", "GEOGR1", "COMGR1", "DSDGR1", "AGEGR1", "SEXGR1", "BMIGR1", "ETHGR1")#
+baseline[, (cat.var):=lapply(.SD, factor), .SDcols=cat.var]#
+#
+#-------------------------------- responder --------------------## #
+itt <- adef[ITTFL=="Y", ]#
+var.here <- c("SUBJID", "PARAMCD", "AVALC")#
+tmp <- itt[PARAMCD %in% c("SR4RS12", "SR4RS04", "SR4RS08", "SR6RS04", "SR6RS08", "SR6RS12", "BICLA04", "BICLA08", "BICLA12", "XSR4RS12", "XSR6RS12", "SR8RS04", "SR8RS08", "SR8RS12"), ..var.here]#
+resp <- dcast(tmp, SUBJID~PARAMCD, value.var="AVALC")#
+var.trns <- c("SR4RS04", "SR4RS08", "SR4RS12", "SR6RS04", "SR6RS08", "SR6RS12", "BICLA04", "BICLA08", "BICLA12", "XSR4RS12", "XSR6RS12", "SR8RS04", "SR8RS08", "SR8RS12")#
+resp[, (var.trns):=lapply(.SD, factor), .SDcols=var.trns]#
+#
+#---------- SLEDAI dimension ---------##
+ssldat <- adqssl[ITTFL=="Y" & AVISITN==1, ]#
+ssldat.w <- dcast(ssldat, SUBJID~PARAMCD, value.var="AVALC")#
+ssl.cont <- c("SELSC", "CHSLED", "PGA", "PGAINC")#
+ssl.cat <- c("SEIZURE", "PSYCHO", "ORGBRAIN", "VISDIST", "CNERVE", "LUPHEAD", "CVA", "VASC", "ARTH", "MYO", "UCASTS", "HEMAT", "PRT", "PYURIA", "RASH", "ALOP", "MU", "PLEURISY", "PERIC", "LOWCOM", "DNAINC", "FEVER", "THROM", "LEUKO")#
+#
+ssldat.cont <- ssldat.w[, lapply(.SD, as.numeric), .SDcols=ssl.cont, by=SUBJID]#
+ssldat.cat <- ssldat.w[, lapply(.SD, function(x) factor(ifelse(x=="Y", "Y", "N"), levels=c("N", "Y"))), .SDcols=ssl.cat, by=SUBJID]#
+#
+ssldat.w[, (ssl.cat):=lapply(.SD, function(x) ifelse(x=="Y", TRUE, FALSE)), .SDcols=ssl.cat]#
+ssldat.w[, (ssl.cont):=lapply(.SD, as.numeric), .SDcols=ssl.cont]#
+ssldat.w[, SUBSELSC:=4*ARTH+2*RASH+2*ALOP+2*MU+2*LOWCOM+2*DNAINC]#
+ssldat.w[, ClinSELSC:=SELSC-(2*LOWCOM+2*DNAINC)]#
+#
+#---------- clinical SLEDAI = only clinical dimension#
+ssldat.w[, SELSCb:=8*SEIZURE+8*PSYCHO+8*ORGBRAIN+8*VISDIST+8*CNERVE+8*LUPHEAD+8*CVA+8*VASC+4*ARTH+4*MYO+2*RASH+2*ALOP+2*MU+2*PLEURISY+2*PERIC+1*FEVER]#
+subselsc <- ssldat.w[, c("SUBJID", "SUBSELSC", "SELSCb", "ClinSELSC")]#
+#
+#------------------ Steroide dose, immunosuppresseur, antimalarial ---------------##
+tmp <- adcmster[ITTFL=="Y" & AVISITN==1, ]#
+blsteroid <- tmp[AVISITN==1 & PARAMCD=="STERDOSE", .(SUBJID, AVAL)]#
+names(blsteroid)[2] <- "STERDOSE"#
+sterdose <- dcast(tmp, SUBJID~PARAMCD, value.var="AVALC")#
+sterdose[,STERDOSE:=as.numeric(STERDOSE)]#
+var.trns <- c("ANMAPRES", "IMMUPRES", "TFAIL")#
+sterdose[, (var.trns) := lapply(.SD, factor), .SDcols=var.trns]#
+sterdose[, STERDOSE:=NULL]#
+#
+#-------------------- anti ds dna -------------##
+dsd <- antids[ITTFL=="Y" & AVISITN==0.1, c("SUBJID", "AVAL")]#
+names(dsd) <- c("SUBJID", "ANTIDSDNA")#
+#
+#--------------------- IG -----------------##
+tmp <- adig[ITTFL=="Y" & AVISITN==1, ]#
+ig <- dcast(tmp, SUBJID~PARAMCD, value.var="AVAL")#
+#
+#-------------------- Treg -------------##
+treg <- adtreg[ITTFL=="Y" & AVISITN==1 & ATPTN==0, c("SUBJID", "AVAL")]#
+names(treg) <- c("SUBJID", "TREG")#
+#
+#------------------- FSS ------------------##
+FATIGVAS.tmp <- adqfss[ITTFL == "Y" & PARAMCD == "FATIGVAS" & AVISITN %in% c(1, 9, 13, 17), c("SUBJID", "AVISITN", "AVAL")]#
+FSSMEAN.tmp <- adqfss[ITTFL == "Y" & PARAMCD == "FSSMEAN" & AVISITN %in% c(1, 9, 13, 17), c("SUBJID", "AVISITN", "AVAL")]#
+FATIGVAS <- dcast(FATIGVAS.tmp, SUBJID~AVISITN, value.var="AVAL")#
+colnames(FATIGVAS) <- c("SUBJID", "FATIGVASW0", "FATIGVASW04", "FATIGVASW08", "FATIGVASW12")#
+FSSMEAN <- dcast(FSSMEAN.tmp, SUBJID~AVISITN, value.var="AVAL")#
+colnames(FSSMEAN) <- c("SUBJID", "FSSMEANW0", "FSSMEANW04", "FSSMEANW08", "FSSMEANW12")#
+#
+#--------------------- IG -----------------##
+tmp <- adqsbl[ITTFL=="Y" & AVISITN==1 & !(PARAMCD %in% c("BILAGA", "BILAGB", "BILAGIMP")), ]#
+bilag <- dcast(tmp, SUBJID~PARAMCD, value.var="AVALC")#
+var.trns <- c("CARSC", "CONSC", "GISC", "HAEMSC", "MUCSC", "MUSCSC", "NEUSC", "OPHSC", "RENSC")#
+bilag[, (var.trns):=lapply(.SD, factor), .SDcols=var.trns]#
+bilag[, TOTAL:=as.numeric(TOTAL)]#
+colnames(bilag)[colnames(bilag)=="TOTAL"] <- "BILAGTOTAL"#
+#
+#--------- BILAG A or B ------------------##
+bilagdim <- c("CONSC", "MUCSC", "NEUSC", "MUSCSC", "CARSC", "GISC", "OPHSC", "RENSC", "HAEMSC")#
+tmp <- adqsbl[ITTFL == "Y" & AVISITN == 1 & PARAMCD %in% bilagdim,]#
+bilaga <- tmp[, sum(AVALC=="A"), by="SUBJID"][, BILAG1A:=ifelse(V1<1, "N", "Y")][, V1:=NULL]#
+bilagb <- tmp[, sum(AVALC=="B"), by="SUBJID"][, BILAG2B:=ifelse(V1<2, "N", "Y")][, V1:=NULL]#
+bilag2 <- merge(bilaga, bilagb, by="SUBJID")#
+#
+#---------------- anti-DS DNA ----------------##
+antids$VISIT <- gsub(" \\(\\+1\\)", "", antids$VISIT)#
+#
+#---------------- lab CT ----------------##
+adlbct$VISIT <- gsub(" \\(\\+1\\)", "", adlbct$VISIT)#
+#
+#-------- concomed ----------------##
+out <- dcm[ATC3 == "ANTIMALARIALS" | CMTRT %in% c("Methotrexate", "Azathioprine") | CMDECOD == "Mycophenolate mofetil", ]#
+conco <- out[ITTFL=="Y" & ONGO=="Y", c("SUBJID", "CMTRT", "CMDECOD", "ATC3")]#
+conco <- conco[, CONCO:=ifelse(ATC3=="ANTIMALARIALS", ATC3, CMDECOD)]#
+cmed <- dcast(conco, SUBJID~CONCO, value.var="CONCO", fun.aggregate=length)#
+names(cmed) <- c("SUBJID", "Antimalarials", "Azathioprine", "Methotrexate", "Mycophenolate.mofetil")#
+cmed[, Antimalarials:=ifelse(Antimalarials==0, "No", "Yes")]#
+cmed[, Azathioprine:=ifelse(Azathioprine==0, "No", "Yes")]#
+cmed[, Methotrexate:=ifelse(Methotrexate==0, "No", "Yes")]#
+cmed[, Mycophenolate.mofetil:=ifelse(Mycophenolate.mofetil==0, "No", "Yes")]#
+rm(out)#
+#
+#--------------- vital sign ------------------##
+blvs <- dcast(advs[ITTFL=="Y" & AVISITN==1], SUBJID~PARAMCD, value.var="AVAL")#
+blvs1 <- dcast(advs[PARAMCD %in% c("OXYSAT", "HEIGHT") & AVISITN==0.1 & ITTFL=="Y"], SUBJID~PARAMCD, value.var="AVAL")#
+#
+#-------------------------------------------- combine -------------------------------------------------------------##
+mymerge <- function(x,y) merge(x, y, by="SUBJID", all.x=TRUE)#
+datainc <- Reduce(mymerge, list(baseline, resp, sterdose, dsd, ig, treg, bilag, subselsc, ssldat.cont, ssldat.cat, FATIGVAS, FSSMEAN, flare, flareV29, blvs, blvs1, medhis, Lupus, bilag2, cmed, blsteroid))#
+datainc[, Response := ifelse(SR4RS12=="Y", 1, 0)]#
+datainc[, Treatment := factor(ifelse(ARMN==1, "ILT-101", "Placebo"), levels=c("Placebo", "ILT-101"))]#
+datainc[, SELGR3 := ifelse(ClinSELSC > 10, ">10", "<=10")]#
+# update#
+datainc[, BLSteroidDose:=factor(ifelse(STERDOSE<=7.5, "None or <=7.5 mg", ">7.5 mg"), levels=c("None or <=7.5 mg", ">7.5 mg"))]#
+datainc[, SELGR2:=factor(ifelse(SELSC<10, "<10", ">=10"), levels=c("<10", ">=10"))]#
+datainc[, SELGR1:=factor(ifelse(SELSC<=10, "<=10", ">10"), levels=c("<=10", ">10"))]#
+datainc[, Responder:=factor(SR4RS12)]#
+datainc[, GEOGR1:=factor(GEOGR1, levels=c("Bulgaria", "Mexico", "Mauritius", "France", "Germany", "Romania", "Spain", "Countries with N < 5"))]#
+levels(datainc$GEOGR1) <- c("Bulgaria", "Mexico", "Mauritius", "France", "Germany", "Romania", "Spain", "Portugal")#
+for (i in c("Antimalarials", "Azathioprine", "Methotrexate", "Mycophenolate.mofetil", "Lupusnephritis")) {#
+    datainc[is.na(get(i)), (i):="No"]#
+  }#
+datainc[, RelevantPopulation := GEOGR1N !=1 & SELSC >= 6 & ClinSELSC >=4]#
+#
+#fwrite(datainc, file=file.path(project, "data", "BLClinData_20190925.txt"), sep="\t")#
+#coxph(Surv(time, status) ~ ARM+STERDOSE+SELSC, datainc)
+9156*84
+9156*84.07
+datainc
+names(datainc)
+tab <- compareGroups(ARM~SEIZURE+PSYCHO+ORGBRAIN+VISDIST+CNERVE+LUPHEAD+CVA+VASC+ARTH+MYO+UCASTS+HEMAT+PRT+PYURIA+RASH+ ALOP+MU+PLEURISY+PERIC+LOWCOM+DNAINC+FEVER+THROM, data= datainc)
+tabres <- createTable(tab)
+tabres
+datainc
+table(datainc$RelevantPopulation)
+names(datainc)
+names(datainc$"PPROTFL")
+table(datainc$PPROTFL)
+?compareGroups
+tab.output <- file.path(output.base, "tables")#
+Rmd.dir <- file.path(project, "Rmd")#
+#
+if (!file.exists(output.base) dir.create(tab.output, recursive=TRUE)
+if (!file.exists(output.base)) dir.create(tab.output, recursive=TRUE)
+export2xls(tabres, file=file.path(tab.output, 'itt_dimsledai.xlsx')
+)
+datain <- datainc#
+source("~/PP/ClinicAssay/LUPIL2/prog/miniSAP_labels.R")
+tab <- compareGroups(ARM~SEIZURE+PSYCHO+ORGBRAIN+VISDIST+CNERVE+LUPHEAD+CVA+VASC+ARTH+MYO+UCASTS+HEMAT+PRT+PYURIA+RASH+ ALOP+MU+PLEURISY+PERIC+LOWCOM+DNAINC+FEVER+THROM, data= datain)#
+tabres <- createTable(tab)
+tabres
+export2xls(tabres, file=file.path(tab.output, 'itt_dimsledai.xlsx'))
+# RITT#
+tab <- compareGroups(ARM~SEIZURE+PSYCHO+ORGBRAIN+VISDIST+CNERVE+LUPHEAD+CVA+VASC+ARTH+MYO+UCASTS+HEMAT+PRT+PYURIA+RASH+ ALOP+MU+PLEURISY+PERIC+LOWCOM+DNAINC+FEVER+THROM, data= datain[RelevantPopulation==TRUE])#
+tabres <- createTable(tab)#
+export2xls(tabres, file=file.path(tab.output, 'ritt_dimsledai.xlsx'))
+# Per Protocol#
+tab <- compareGroups(ARM~SEIZURE+PSYCHO+ORGBRAIN+VISDIST+CNERVE+LUPHEAD+CVA+VASC+ARTH+MYO+UCASTS+HEMAT+PRT+PYURIA+RASH+ ALOP+MU+PLEURISY+PERIC+LOWCOM+DNAINC+FEVER+THROM, data= datain[PPROTFL=="Y"])#
+tabres <- createTable(tab)#
+export2xls(tabres, file=file.path(tab.output, 'pp_dimsledai.xlsx'))#
+#
+# restricted Per Protocol#
+tab <- compareGroups(ARM~SEIZURE+PSYCHO+ORGBRAIN+VISDIST+CNERVE+LUPHEAD+CVA+VASC+ARTH+MYO+UCASTS+HEMAT+PRT+PYURIA+RASH+ ALOP+MU+PLEURISY+PERIC+LOWCOM+DNAINC+FEVER+THROM, data= datain[PPROTFL=="Y" & RelevantPopulation==TRUE])#
+tabres <- createTable(tab)#
+export2xls(tabres, file=file.path(tab.output, 'rpp_dimsledai.xlsx'))
+tabres
+datain
+#------------------- Compare Groups response -----------##
+# ITT#
+tab <- compareGroups(Responder~SEIZURE+PSYCHO+ORGBRAIN+VISDIST+CNERVE+LUPHEAD+CVA+VASC+ARTH+MYO+UCASTS+HEMAT+PRT+PYURIA+RASH+ ALOP+MU+PLEURISY+PERIC+LOWCOM+DNAINC+FEVER+THROM, data= datain)#
+tabres <- createTable(tab)#
+export2xls(tabres, file=file.path(tab.output, 'itt_response_dimsledai.xlsx'))#
+#
+# RITT#
+tab <- compareGroups(Responder~SEIZURE+PSYCHO+ORGBRAIN+VISDIST+CNERVE+LUPHEAD+CVA+VASC+ARTH+MYO+UCASTS+HEMAT+PRT+PYURIA+RASH+ ALOP+MU+PLEURISY+PERIC+LOWCOM+DNAINC+FEVER+THROM, data= datain[RelevantPopulation==TRUE])#
+tabres <- createTable(tab)#
+export2xls(tabres, file=file.path(tab.output, 'ritt_response_dimsledai.xlsx'))#
+#
+# Per Protocol#
+tab <- compareGroups(Responder~SEIZURE+PSYCHO+ORGBRAIN+VISDIST+CNERVE+LUPHEAD+CVA+VASC+ARTH+MYO+UCASTS+HEMAT+PRT+PYURIA+RASH+ ALOP+MU+PLEURISY+PERIC+LOWCOM+DNAINC+FEVER+THROM, data= datain[PPROTFL=="Y"])#
+tabres <- createTable(tab)#
+export2xls(tabres, file=file.path(tab.output, 'pp_response_dimsledai.xlsx'))#
+#
+# restricted Per Protocol#
+tab <- compareGroups(Responder~SEIZURE+PSYCHO+ORGBRAIN+VISDIST+CNERVE+LUPHEAD+CVA+VASC+ARTH+MYO+UCASTS+HEMAT+PRT+PYURIA+RASH+ ALOP+MU+PLEURISY+PERIC+LOWCOM+DNAINC+FEVER+THROM, data= datain[PPROTFL=="Y" & RelevantPopulation==TRUE])#
+tabres <- createTable(tab)#
+export2xls(tabres, file=file.path(tab.output, 'rpp_response_dimsledai.xlsx'))
+q()
+805.20-(366.56+113.89)
+#--------- options ----------##
+options(java.parameters = "-Xmx2048m")#
+#
+#--------- library ---------##
+library(haven) # read/write sas tables#
+library(data.table) # data organiser#
+library(compareGroups) # comparison tables#
+library(knitr) # table#
+library(rmdformats) # rmarkdown output style#
+library(kableExtra) # extra for kable#
+library(XML)#
+library(finalfit) ##
+library(labelled) ##
+library(missMDA) ##
+library(ade4) ##
+library(factoextra) ##
+library(emmeans) ##
+library(survminer) ##
+#
+getDesc <- function(x) {#
+    switch(class(x)[1], #
+    # numeric#
+    numeric = { out <-  c(sum(is.na(x)), fivenum(x)) },#
+    # character#
+    character = { out <- unique(x) },#
+    # hms#
+    hms = { out <- c(sum(is.na(x)), fivenum(x)) },#
+    # Date#
+    Date = { out <- c(sum(is.na(x)), length(x)) },#
+    stop("Enter something that switches me!")#
+    )#
+    return(out)#
+}#
+#
+dowle <- function(DT) {#
+  dat <- copy(DT)#
+  for (i in names(dat)) {#
+    dat[is.na(get(i)), (i):=0]#
+  }#
+  return(dat)#
+}#
+#
+source("~/PP/ClinicAssay/LUPIL2/prog/summary_functions.R")#
+#------------ project ------------##
+#input <- "~/Documents/SASUniversityEdition/myfolders/LUPIL2V17/data"#
+input <- "~/Documents/SASUniversityEdition/myfolders/LUPIL2/uncompresdata"#
+project <- "~/PP/ClinicAssay/LUPIL2PAPER"#
+limathon <- file.path(project, "data", "export", "exp20190522")#
+#output.base <- file.path(project, "output")#
+#output.base <- file.path(project, "output/analyse_201906251633")#
+#output.base <- file.path(project, "output/analyse_201908231804")#
+#output.base <- file.path(project, "output/analyse_201909031842")#
+#output.base <- file.path(project, "output/analyse_201912021614")#
+output.base <- file.path(project, "output/analyse_202101181724")#
+tab.output <- file.path(output.base, "tables")#
+Rmd.dir <- file.path(project, "Rmd")#
+#
+if (!file.exists(output.base)) dir.create(tab.output, recursive=TRUE)#
+#
+#------------ list data -----------##
+l <- list.files(input, ".sas7bdat", full.name=TRUE)#
+#
+#------------ load supp -----------##
+trtwithdraw <- read.table(file.path(project, "data", "lupil2_withdraw_visits.txt"), sep="\t", header=TRUE)#
+#
+#------------ load data -----------##
+responders <- read_sas(l[grep("responder.sas7bdat", l)])#
+adef <- read_sas(l[grep("adef.sas7bdat", l)])#
+adqssl <- read_sas(l[grep("adqssl.sas7bdat", l)]) #
+adcmster <- read_sas(l[grep("adcmster.sas7bdat", l)])#
+dcm <- read_sas(l[grep("d_cm.sas7bdat", l)])#
+antids <- read_sas(l[grep("adlbantdsdna.sas7bdat", l)])#
+adig <- read_sas(l[grep("adlbig.sas7bdat", l)])#
+adtreg <- read_sas(l[grep("adlbtreg.sas7bdat", l)])#
+adqsbl <- read_sas(l[grep("adqsbl.sas7bdat", l)])#
+adsl <- read_sas(l[grep("adsl.sas7bdat", l)])#
+adqfss <- read_sas(l[grep("adqsfss.sas7bdat", l)]) # #
+adlbct <- read_sas(l[grep("adlbct.sas7bdat", l)]) # lab test#
+adqol <- read_sas(l[grep("d_qsqol.sas7bdat", l)]) # quality of life#
+dsv <- read_sas(l[grep("d_sv.sas7bdat", l)]) # visite date#
+setDT(advs <- read_sas(l[grep("advs.sas7bdat", l)]))#
+setDT(dmh <- read_sas(l[grep("d_mh.sas7bdat", l)]))#
+#
+# convert to data.table#
+setDT(responders)#
+setDT(adef)#
+setDT(adqssl)#
+setDT(adcmster)#
+setDT(dcm)#
+setDT(antids)#
+setDT(adig)#
+setDT(adtreg)#
+setDT(adqsbl)#
+setDT(adsl)#
+setDT(adqfss)#
+setDT(adlbct)#
+setDT(adqol)#
+setDT(dsv)#
+#
+#----------------- medial history -----------------##
+medhis <- fread(file.path(project, "data", "lupil2_SLE_Disease_history.txt"), sep="\t")#
+medhis <- medhis[, .(SUBJID, DIAGMETH, OTHER.AUTO, SLE.FHIST, OTHER.AUTO.FHIST)]#
+Lupus <- dmh[ITTFL=="Y" & MHDECOD =="Lupus nephritis", c("SUBJID")]#
+Lupus[, Lupusnephritis:=factor("Yes")]#
+#
+#----------------------- FLARE -----------------##
+flare <- adqssl[PARAMCD=="FLSC" & AVISITN %in% c(9, 13, 17), .(NFLARE=sum(AVALC %in% c("Mild or Moderate", "Severe"))), by="SUBJID"]#
+flare[, FLARE:=ifelse(NFLARE>0, "Yes", "No")]#
+flare$FLARE <- factor(flare$FLARE)#
+#
+# Week 24#
+flareV29 <- adqssl[AVISITN == 29 & PARAMCD == "FLSC", .(FLAREW24=ifelse(AVALC %in% c("Mild or Moderate", "Severe"), 1, 0)), by=SUBJID]#
+#
+# visit date#
+lvisitdate <- dsv[VISITNUM %in% 1:17 & ITTFL=="Y", .(LASTVISITDATE=max(SVSTDT, na.rm=TRUE)), by=SUBJID]#
+lvisit <- dsv[(VISITNUM %in% 1:17 & ITTFL=="Y" & SVSTDT==TR01EDT) | (SUBJID=="008-001-007" & VISITNUM==12), .(SUBJID, VISIT, TRTSDT, TR01EDT)]#
+lvisit <- merge(lvisit, lvisitdate, by="SUBJID")#
+#
+# flare extract#
+#fl <- sfi[AVISIT %in% c("V09", "V13", "V17"), .(AVISIT=AVISIT[which(SFI == "MOD")[1]], FLDATE=ADATE[which(SFI == "MOD")[1]]), by="SUBJID"]#
+fl <- adqssl[AVISITN %in% c(9, 13, 17) & PARAMCD == "FLSC", #
+            .(AVISIT=AVISIT[which(AVALC %in% c("Mild or Moderate", "Severe"))[1]], #
+            FLDATE=ADT[which(AVALC %in% c("Mild or Moderate", "Severe"))[1]]), #
+            by="SUBJID"]#
+fl[, flstatus:=ifelse(is.na(FLDATE), 0, 1)]#
+#lct <- Sys.getlocale("LC_TIME")#
+#Sys.setlocale("LC_TIME", "C")#
+fl[, FLDATE:=as.Date(FLDATE, format="%Y-%m-%d")]#
+#Sys.setlocale("LC_TIME", lct)#
+#
+flaretime <- merge(lvisit, fl, by="SUBJID")#
+flaretime[, ENDPOINT:=min(TR01EDT, LASTVISITDATE, FLDATE, na.rm=TRUE), by="SUBJID"]#
+flaretime[, `:=`(status=flstatus,  time=ENDPOINT-TRTSDT+1)]#
+flaretime[!is.na(FLDATE), status:=ifelse(FLDATE>TR01EDT, 0, 1)] #
+flaretime[, FLENDPOINT:=LASTVISITDATE]#
+flaretime[flstatus == 1, FLENDPOINT:=FLDATE]#
+flaretime[,fltime:=FLENDPOINT-TRTSDT]#
+#
+# flare#
+flare <- merge(flare, flaretime[,c("SUBJID", "status", "time", "flstatus", "fltime")], by="SUBJID")#
+#
+#------------------------------ baseline ------------------##
+varkeep <- c("STUDYID", "USUBJID", "SUBJID", "PSUBJID", "SITEID", "FASFL", "SAFFL", "SAFP2FL", "ITTFL", "PPROTFL", "RANDFL", "ARM", "ARMN", "AGE", "SEX", "SEXN", "AEYN", "CMYN", "MHYN", "PRYN", "DURDHXN", "TFAILDT", "STERGR1", "STERGR1N", "SELGR1", "SELGR1N", "GEOGR1", "GEOGR1n", "COMGR1", "COMGR1n", "DSDGR1", "DSDGR1n", "AGEGR1", "AGEGR1n", "SEXGR1", "SEXGR1n", "BMIGR1", "BMIGR1n", "ETHGR1", "ETHGR1n")#
+baseline <- adsl[ITTFL=="Y", ..varkeep]#
+colnames(baseline) <- c("STUDYID", "USUBJID", "SUBJID", "PSUBJID", "SITEID", "FASFL", "SAFFL", "SAFP2FL", "ITTFL", "PPROTFL", "RANDFL", "ARM", "ARMN", "AGE", "SEX", "SEXN", "AEYN", "CMYN", "MHYN", "PRYN", "DURDHXN", "TFAILDT", "STERGR1", "STERGR1N", "SELGR1", "SELGR1N", "GEOGR1", "GEOGR1N", "COMGR1", "COMGR1N", "DSDGR1", "DSDGR1N", "AGEGR1", "AGEGR1N", "SEXGR1", "SEXGR1N", "BMIGR1", "BMIGR1N", "ETHGR1", "ETHGR1N")#
+#
+cat.var <- c("ARM", "SEX", "AEYN", "CMYN", "MHYN", "PRYN", "STERGR1", "SELGR1", "GEOGR1", "COMGR1", "DSDGR1", "AGEGR1", "SEXGR1", "BMIGR1", "ETHGR1")#
+baseline[, (cat.var):=lapply(.SD, factor), .SDcols=cat.var]#
+#
+#-------------------------------- responder --------------------## #
+itt <- adef[ITTFL=="Y", ]#
+var.here <- c("SUBJID", "PARAMCD", "AVALC")#
+tmp <- itt[PARAMCD %in% c("SR4RS12", "SR4RS04", "SR4RS08", "SR6RS04", "SR6RS08", "SR6RS12", "BICLA04", "BICLA08", "BICLA12", "XSR4RS12", "XSR6RS12", "SR8RS04", "SR8RS08", "SR8RS12"), ..var.here]#
+resp <- dcast(tmp, SUBJID~PARAMCD, value.var="AVALC")#
+var.trns <- c("SR4RS04", "SR4RS08", "SR4RS12", "SR6RS04", "SR6RS08", "SR6RS12", "BICLA04", "BICLA08", "BICLA12", "XSR4RS12", "XSR6RS12", "SR8RS04", "SR8RS08", "SR8RS12")#
+resp[, (var.trns):=lapply(.SD, factor), .SDcols=var.trns]#
+#
+#---------- SLEDAI dimension ---------##
+ssldat <- adqssl[ITTFL=="Y" & AVISITN==1, ]#
+ssldat.w <- dcast(ssldat, SUBJID~PARAMCD, value.var="AVALC")#
+ssl.cont <- c("SELSC", "CHSLED", "PGA", "PGAINC")#
+ssl.cat <- c("SEIZURE", "PSYCHO", "ORGBRAIN", "VISDIST", "CNERVE", "LUPHEAD", "CVA", "VASC", "ARTH", "MYO", "UCASTS", "HEMAT", "PRT", "PYURIA", "RASH", "ALOP", "MU", "PLEURISY", "PERIC", "LOWCOM", "DNAINC", "FEVER", "THROM", "LEUKO")#
+#
+ssldat.cont <- ssldat.w[, lapply(.SD, as.numeric), .SDcols=ssl.cont, by=SUBJID]#
+ssldat.cat <- ssldat.w[, lapply(.SD, function(x) factor(ifelse(x=="Y", "Y", "N"), levels=c("N", "Y"))), .SDcols=ssl.cat, by=SUBJID]#
+#
+ssldat.w[, (ssl.cat):=lapply(.SD, function(x) ifelse(x=="Y", TRUE, FALSE)), .SDcols=ssl.cat]#
+ssldat.w[, (ssl.cont):=lapply(.SD, as.numeric), .SDcols=ssl.cont]#
+ssldat.w[, SUBSELSC:=4*ARTH+2*RASH+2*ALOP+2*MU+2*LOWCOM+2*DNAINC]#
+ssldat.w[, ClinSELSC:=SELSC-(2*LOWCOM+2*DNAINC)]#
+#
+#---------- clinical SLEDAI = only clinical dimension#
+ssldat.w[, SELSCb:=8*SEIZURE+8*PSYCHO+8*ORGBRAIN+8*VISDIST+8*CNERVE+8*LUPHEAD+8*CVA+8*VASC+4*ARTH+4*MYO+2*RASH+2*ALOP+2*MU+2*PLEURISY+2*PERIC+1*FEVER]#
+subselsc <- ssldat.w[, c("SUBJID", "SUBSELSC", "SELSCb", "ClinSELSC")]#
+#
+#------------------ Steroide dose, immunosuppresseur, antimalarial ---------------##
+tmp <- adcmster[ITTFL=="Y" & AVISITN==1, ]#
+blsteroid <- tmp[AVISITN==1 & PARAMCD=="STERDOSE", .(SUBJID, AVAL)]#
+names(blsteroid)[2] <- "STERDOSE"#
+sterdose <- dcast(tmp, SUBJID~PARAMCD, value.var="AVALC")#
+sterdose[,STERDOSE:=as.numeric(STERDOSE)]#
+var.trns <- c("ANMAPRES", "IMMUPRES", "TFAIL")#
+sterdose[, (var.trns) := lapply(.SD, factor), .SDcols=var.trns]#
+sterdose[, STERDOSE:=NULL]#
+#
+#-------------------- anti ds dna -------------##
+dsd <- antids[ITTFL=="Y" & AVISITN==0.1, c("SUBJID", "AVAL")]#
+names(dsd) <- c("SUBJID", "ANTIDSDNA")#
+#
+#--------------------- IG -----------------##
+tmp <- adig[ITTFL=="Y" & AVISITN==1, ]#
+ig <- dcast(tmp, SUBJID~PARAMCD, value.var="AVAL")#
+#
+#-------------------- Treg -------------##
+treg <- adtreg[ITTFL=="Y" & AVISITN==1 & ATPTN==0, c("SUBJID", "AVAL")]#
+names(treg) <- c("SUBJID", "TREG")#
+#
+#------------------- FSS ------------------##
+FATIGVAS.tmp <- adqfss[ITTFL == "Y" & PARAMCD == "FATIGVAS" & AVISITN %in% c(1, 9, 13, 17), c("SUBJID", "AVISITN", "AVAL")]#
+FSSMEAN.tmp <- adqfss[ITTFL == "Y" & PARAMCD == "FSSMEAN" & AVISITN %in% c(1, 9, 13, 17), c("SUBJID", "AVISITN", "AVAL")]#
+FATIGVAS <- dcast(FATIGVAS.tmp, SUBJID~AVISITN, value.var="AVAL")#
+colnames(FATIGVAS) <- c("SUBJID", "FATIGVASW0", "FATIGVASW04", "FATIGVASW08", "FATIGVASW12")#
+FSSMEAN <- dcast(FSSMEAN.tmp, SUBJID~AVISITN, value.var="AVAL")#
+colnames(FSSMEAN) <- c("SUBJID", "FSSMEANW0", "FSSMEANW04", "FSSMEANW08", "FSSMEANW12")#
+#
+#--------------------- IG -----------------##
+tmp <- adqsbl[ITTFL=="Y" & AVISITN==1 & !(PARAMCD %in% c("BILAGA", "BILAGB", "BILAGIMP")), ]#
+bilag <- dcast(tmp, SUBJID~PARAMCD, value.var="AVALC")#
+var.trns <- c("CARSC", "CONSC", "GISC", "HAEMSC", "MUCSC", "MUSCSC", "NEUSC", "OPHSC", "RENSC")#
+bilag[, (var.trns):=lapply(.SD, factor), .SDcols=var.trns]#
+bilag[, TOTAL:=as.numeric(TOTAL)]#
+colnames(bilag)[colnames(bilag)=="TOTAL"] <- "BILAGTOTAL"#
+#
+#--------- BILAG A or B ------------------##
+bilagdim <- c("CONSC", "MUCSC", "NEUSC", "MUSCSC", "CARSC", "GISC", "OPHSC", "RENSC", "HAEMSC")#
+tmp <- adqsbl[ITTFL == "Y" & AVISITN == 1 & PARAMCD %in% bilagdim,]#
+bilaga <- tmp[, sum(AVALC=="A"), by="SUBJID"][, BILAG1A:=ifelse(V1<1, "N", "Y")][, V1:=NULL]#
+bilagb <- tmp[, sum(AVALC=="B"), by="SUBJID"][, BILAG2B:=ifelse(V1<2, "N", "Y")][, V1:=NULL]#
+bilag2 <- merge(bilaga, bilagb, by="SUBJID")#
+#
+#---------------- anti-DS DNA ----------------##
+antids$VISIT <- gsub(" \\(\\+1\\)", "", antids$VISIT)#
+#
+#---------------- lab CT ----------------##
+adlbct$VISIT <- gsub(" \\(\\+1\\)", "", adlbct$VISIT)#
+#
+#-------- concomed ----------------##
+out <- dcm[ATC3 == "ANTIMALARIALS" | CMTRT %in% c("Methotrexate", "Azathioprine") | CMDECOD == "Mycophenolate mofetil", ]#
+conco <- out[ITTFL=="Y" & ONGO=="Y", c("SUBJID", "CMTRT", "CMDECOD", "ATC3")]#
+conco <- conco[, CONCO:=ifelse(ATC3=="ANTIMALARIALS", ATC3, CMDECOD)]#
+cmed <- dcast(conco, SUBJID~CONCO, value.var="CONCO", fun.aggregate=length)#
+names(cmed) <- c("SUBJID", "Antimalarials", "Azathioprine", "Methotrexate", "Mycophenolate.mofetil")#
+cmed[, Antimalarials:=ifelse(Antimalarials==0, "No", "Yes")]#
+cmed[, Azathioprine:=ifelse(Azathioprine==0, "No", "Yes")]#
+cmed[, Methotrexate:=ifelse(Methotrexate==0, "No", "Yes")]#
+cmed[, Mycophenolate.mofetil:=ifelse(Mycophenolate.mofetil==0, "No", "Yes")]#
+rm(out)#
+#
+#--------------- vital sign ------------------##
+blvs <- dcast(advs[ITTFL=="Y" & AVISITN==1], SUBJID~PARAMCD, value.var="AVAL")#
+blvs1 <- dcast(advs[PARAMCD %in% c("OXYSAT", "HEIGHT") & AVISITN==0.1 & ITTFL=="Y"], SUBJID~PARAMCD, value.var="AVAL")#
+#
+#-------------------------------------------- combine -------------------------------------------------------------##
+mymerge <- function(x,y) merge(x, y, by="SUBJID", all.x=TRUE)#
+datainc <- Reduce(mymerge, list(baseline, resp, sterdose, dsd, ig, treg, bilag, subselsc, ssldat.cont, ssldat.cat, FATIGVAS, FSSMEAN, flare, flareV29, blvs, blvs1, medhis, Lupus, bilag2, cmed, blsteroid))#
+datainc[, Response := ifelse(SR4RS12=="Y", 1, 0)]#
+datainc[, Treatment := factor(ifelse(ARMN==1, "ILT-101", "Placebo"), levels=c("Placebo", "ILT-101"))]#
+datainc[, SELGR3 := ifelse(ClinSELSC > 10, ">10", "<=10")]#
+# update#
+datainc[, BLSteroidDose:=factor(ifelse(STERDOSE<=7.5, "None or <=7.5 mg", ">7.5 mg"), levels=c("None or <=7.5 mg", ">7.5 mg"))]#
+datainc[, SELGR2:=factor(ifelse(SELSC<10, "<10", ">=10"), levels=c("<10", ">=10"))]#
+datainc[, SELGR1:=factor(ifelse(SELSC<=10, "<=10", ">10"), levels=c("<=10", ">10"))]#
+datainc[, Responder:=factor(SR4RS12)]#
+datainc[, GEOGR1:=factor(GEOGR1, levels=c("Bulgaria", "Mexico", "Mauritius", "France", "Germany", "Romania", "Spain", "Countries with N < 5"))]#
+levels(datainc$GEOGR1) <- c("Bulgaria", "Mexico", "Mauritius", "France", "Germany", "Romania", "Spain", "Portugal")#
+for (i in c("Antimalarials", "Azathioprine", "Methotrexate", "Mycophenolate.mofetil", "Lupusnephritis")) {#
+    datainc[is.na(get(i)), (i):="No"]#
+  }#
+datainc[, RelevantPopulation := GEOGR1N !=1 & SELSC >= 6 & ClinSELSC >=4]#
+#
+datain <- datainc#
+source("~/PP/ClinicAssay/LUPIL2/prog/miniSAP_labels.R")
+library(mlr3)
+?createDummyFeatures
+q()
+#--------- options ----------##
+options(java.parameters = "-Xmx2048m")#
+#
+#--------- library ---------##
+library(haven) # read/write sas tables#
+library(data.table) # data organiser#
+library(compareGroups) # comparison tables#
+library(knitr) # table#
+library(rmdformats) # rmarkdown output style#
+library(kableExtra) # extra for kable#
+library(XML)#
+library(finalfit) ##
+library(labelled) ##
+library(missMDA) ##
+library(ade4) ##
+library(factoextra) ##
+library(emmeans) ##
+library(survminer) ##
+#
+getDesc <- function(x) {#
+    switch(class(x)[1], #
+    # numeric#
+    numeric = { out <-  c(sum(is.na(x)), fivenum(x)) },#
+    # character#
+    character = { out <- unique(x) },#
+    # hms#
+    hms = { out <- c(sum(is.na(x)), fivenum(x)) },#
+    # Date#
+    Date = { out <- c(sum(is.na(x)), length(x)) },#
+    stop("Enter something that switches me!")#
+    )#
+    return(out)#
+}#
+#
+dowle <- function(DT) {#
+  dat <- copy(DT)#
+  for (i in names(dat)) {#
+    dat[is.na(get(i)), (i):=0]#
+  }#
+  return(dat)#
+}#
+#
+source("~/PP/ClinicAssay/LUPIL2/prog/summary_functions.R")#
+#------------ project ------------##
+#input <- "~/Documents/SASUniversityEdition/myfolders/LUPIL2V17/data"#
+input <- "~/Documents/SASUniversityEdition/myfolders/LUPIL2/uncompresdata"#
+project <- "~/PP/ClinicAssay/LUPIL2PAPER"#
+limathon <- file.path(project, "data", "export", "exp20190522")#
+#output.base <- file.path(project, "output")#
+#output.base <- file.path(project, "output/analyse_201906251633")#
+#output.base <- file.path(project, "output/analyse_201908231804")#
+#output.base <- file.path(project, "output/analyse_201909031842")#
+#output.base <- file.path(project, "output/analyse_201912021614")#
+output.base <- file.path(project, "output/analyse_202101181724")#
+tab.output <- file.path(output.base, "tables")#
+Rmd.dir <- file.path(project, "Rmd")#
+#
+if (!file.exists(output.base)) dir.create(tab.output, recursive=TRUE)#
+#
+#------------ list data -----------##
+l <- list.files(input, ".sas7bdat", full.name=TRUE)#
+#
+#------------ load supp -----------##
+trtwithdraw <- read.table(file.path(project, "data", "lupil2_withdraw_visits.txt"), sep="\t", header=TRUE)#
+#
+#------------ load data -----------##
+responders <- read_sas(l[grep("responder.sas7bdat", l)])#
+adef <- read_sas(l[grep("adef.sas7bdat", l)])#
+adqssl <- read_sas(l[grep("adqssl.sas7bdat", l)]) #
+adcmster <- read_sas(l[grep("adcmster.sas7bdat", l)])#
+dcm <- read_sas(l[grep("d_cm.sas7bdat", l)])#
+antids <- read_sas(l[grep("adlbantdsdna.sas7bdat", l)])#
+adig <- read_sas(l[grep("adlbig.sas7bdat", l)])#
+adtreg <- read_sas(l[grep("adlbtreg.sas7bdat", l)])#
+adqsbl <- read_sas(l[grep("adqsbl.sas7bdat", l)])#
+adsl <- read_sas(l[grep("adsl.sas7bdat", l)])#
+adqfss <- read_sas(l[grep("adqsfss.sas7bdat", l)]) # #
+adlbct <- read_sas(l[grep("adlbct.sas7bdat", l)]) # lab test#
+adqol <- read_sas(l[grep("d_qsqol.sas7bdat", l)]) # quality of life#
+dsv <- read_sas(l[grep("d_sv.sas7bdat", l)]) # visite date#
+setDT(advs <- read_sas(l[grep("advs.sas7bdat", l)]))#
+setDT(dmh <- read_sas(l[grep("d_mh.sas7bdat", l)]))#
+#
+# convert to data.table#
+setDT(responders)#
+setDT(adef)#
+setDT(adqssl)#
+setDT(adcmster)#
+setDT(dcm)#
+setDT(antids)#
+setDT(adig)#
+setDT(adtreg)#
+setDT(adqsbl)#
+setDT(adsl)#
+setDT(adqfss)#
+setDT(adlbct)#
+setDT(adqol)#
+setDT(dsv)#
+#
+#----------------- medial history -----------------##
+medhis <- fread(file.path(project, "data", "lupil2_SLE_Disease_history.txt"), sep="\t")#
+medhis <- medhis[, .(SUBJID, DIAGMETH, OTHER.AUTO, SLE.FHIST, OTHER.AUTO.FHIST)]#
+Lupus <- dmh[ITTFL=="Y" & MHDECOD =="Lupus nephritis", c("SUBJID")]#
+Lupus[, Lupusnephritis:=factor("Yes")]#
+#
+#----------------------- FLARE -----------------##
+flare <- adqssl[PARAMCD=="FLSC" & AVISITN %in% c(9, 13, 17), .(NFLARE=sum(AVALC %in% c("Mild or Moderate", "Severe"))), by="SUBJID"]#
+flare[, FLARE:=ifelse(NFLARE>0, "Yes", "No")]#
+flare$FLARE <- factor(flare$FLARE)#
+#
+# Week 24#
+flareV29 <- adqssl[AVISITN == 29 & PARAMCD == "FLSC", .(FLAREW24=ifelse(AVALC %in% c("Mild or Moderate", "Severe"), 1, 0)), by=SUBJID]#
+#
+# visit date#
+lvisitdate <- dsv[VISITNUM %in% 1:17 & ITTFL=="Y", .(LASTVISITDATE=max(SVSTDT, na.rm=TRUE)), by=SUBJID]#
+lvisit <- dsv[(VISITNUM %in% 1:17 & ITTFL=="Y" & SVSTDT==TR01EDT) | (SUBJID=="008-001-007" & VISITNUM==12), .(SUBJID, VISIT, TRTSDT, TR01EDT)]#
+lvisit <- merge(lvisit, lvisitdate, by="SUBJID")#
+#
+# flare extract#
+#fl <- sfi[AVISIT %in% c("V09", "V13", "V17"), .(AVISIT=AVISIT[which(SFI == "MOD")[1]], FLDATE=ADATE[which(SFI == "MOD")[1]]), by="SUBJID"]#
+fl <- adqssl[AVISITN %in% c(9, 13, 17) & PARAMCD == "FLSC", #
+            .(AVISIT=AVISIT[which(AVALC %in% c("Mild or Moderate", "Severe"))[1]], #
+            FLDATE=ADT[which(AVALC %in% c("Mild or Moderate", "Severe"))[1]]), #
+            by="SUBJID"]#
+fl[, flstatus:=ifelse(is.na(FLDATE), 0, 1)]#
+#lct <- Sys.getlocale("LC_TIME")#
+#Sys.setlocale("LC_TIME", "C")#
+fl[, FLDATE:=as.Date(FLDATE, format="%Y-%m-%d")]#
+#Sys.setlocale("LC_TIME", lct)#
+#
+flaretime <- merge(lvisit, fl, by="SUBJID")#
+flaretime[, ENDPOINT:=min(TR01EDT, LASTVISITDATE, FLDATE, na.rm=TRUE), by="SUBJID"]#
+flaretime[, `:=`(status=flstatus,  time=ENDPOINT-TRTSDT+1)]#
+flaretime[!is.na(FLDATE), status:=ifelse(FLDATE>TR01EDT, 0, 1)] #
+flaretime[, FLENDPOINT:=LASTVISITDATE]#
+flaretime[flstatus == 1, FLENDPOINT:=FLDATE]#
+flaretime[,fltime:=FLENDPOINT-TRTSDT]#
+#
+# flare#
+flare <- merge(flare, flaretime[,c("SUBJID", "status", "time", "flstatus", "fltime")], by="SUBJID")#
+#
+#------------------------------ baseline ------------------##
+varkeep <- c("STUDYID", "USUBJID", "SUBJID", "PSUBJID", "SITEID", "FASFL", "SAFFL", "SAFP2FL", "ITTFL", "PPROTFL", "RANDFL", "ARM", "ARMN", "AGE", "SEX", "SEXN", "AEYN", "CMYN", "MHYN", "PRYN", "DURDHXN", "TFAILDT", "STERGR1", "STERGR1N", "SELGR1", "SELGR1N", "GEOGR1", "GEOGR1n", "COMGR1", "COMGR1n", "DSDGR1", "DSDGR1n", "AGEGR1", "AGEGR1n", "SEXGR1", "SEXGR1n", "BMIGR1", "BMIGR1n", "ETHGR1", "ETHGR1n")#
+baseline <- adsl[ITTFL=="Y", ..varkeep]#
+colnames(baseline) <- c("STUDYID", "USUBJID", "SUBJID", "PSUBJID", "SITEID", "FASFL", "SAFFL", "SAFP2FL", "ITTFL", "PPROTFL", "RANDFL", "ARM", "ARMN", "AGE", "SEX", "SEXN", "AEYN", "CMYN", "MHYN", "PRYN", "DURDHXN", "TFAILDT", "STERGR1", "STERGR1N", "SELGR1", "SELGR1N", "GEOGR1", "GEOGR1N", "COMGR1", "COMGR1N", "DSDGR1", "DSDGR1N", "AGEGR1", "AGEGR1N", "SEXGR1", "SEXGR1N", "BMIGR1", "BMIGR1N", "ETHGR1", "ETHGR1N")#
+#
+cat.var <- c("ARM", "SEX", "AEYN", "CMYN", "MHYN", "PRYN", "STERGR1", "SELGR1", "GEOGR1", "COMGR1", "DSDGR1", "AGEGR1", "SEXGR1", "BMIGR1", "ETHGR1")#
+baseline[, (cat.var):=lapply(.SD, factor), .SDcols=cat.var]#
+#
+#-------------------------------- responder --------------------## #
+itt <- adef[ITTFL=="Y", ]#
+var.here <- c("SUBJID", "PARAMCD", "AVALC")#
+tmp <- itt[PARAMCD %in% c("SR4RS12", "SR4RS04", "SR4RS08", "SR6RS04", "SR6RS08", "SR6RS12", "BICLA04", "BICLA08", "BICLA12", "XSR4RS12", "XSR6RS12", "SR8RS04", "SR8RS08", "SR8RS12"), ..var.here]#
+resp <- dcast(tmp, SUBJID~PARAMCD, value.var="AVALC")#
+var.trns <- c("SR4RS04", "SR4RS08", "SR4RS12", "SR6RS04", "SR6RS08", "SR6RS12", "BICLA04", "BICLA08", "BICLA12", "XSR4RS12", "XSR6RS12", "SR8RS04", "SR8RS08", "SR8RS12")#
+resp[, (var.trns):=lapply(.SD, factor), .SDcols=var.trns]#
+#
+#---------- SLEDAI dimension ---------##
+ssldat <- adqssl[ITTFL=="Y" & AVISITN==1, ]#
+ssldat.w <- dcast(ssldat, SUBJID~PARAMCD, value.var="AVALC")#
+ssl.cont <- c("SELSC", "CHSLED", "PGA", "PGAINC")#
+ssl.cat <- c("SEIZURE", "PSYCHO", "ORGBRAIN", "VISDIST", "CNERVE", "LUPHEAD", "CVA", "VASC", "ARTH", "MYO", "UCASTS", "HEMAT", "PRT", "PYURIA", "RASH", "ALOP", "MU", "PLEURISY", "PERIC", "LOWCOM", "DNAINC", "FEVER", "THROM", "LEUKO")#
+#
+ssldat.cont <- ssldat.w[, lapply(.SD, as.numeric), .SDcols=ssl.cont, by=SUBJID]#
+ssldat.cat <- ssldat.w[, lapply(.SD, function(x) factor(ifelse(x=="Y", "Y", "N"), levels=c("N", "Y"))), .SDcols=ssl.cat, by=SUBJID]#
+#
+ssldat.w[, (ssl.cat):=lapply(.SD, function(x) ifelse(x=="Y", TRUE, FALSE)), .SDcols=ssl.cat]#
+ssldat.w[, (ssl.cont):=lapply(.SD, as.numeric), .SDcols=ssl.cont]#
+ssldat.w[, SUBSELSC:=4*ARTH+2*RASH+2*ALOP+2*MU+2*LOWCOM+2*DNAINC]#
+ssldat.w[, ClinSELSC:=SELSC-(2*LOWCOM+2*DNAINC)]#
+#
+#---------- clinical SLEDAI = only clinical dimension#
+ssldat.w[, SELSCb:=8*SEIZURE+8*PSYCHO+8*ORGBRAIN+8*VISDIST+8*CNERVE+8*LUPHEAD+8*CVA+8*VASC+4*ARTH+4*MYO+2*RASH+2*ALOP+2*MU+2*PLEURISY+2*PERIC+1*FEVER]#
+subselsc <- ssldat.w[, c("SUBJID", "SUBSELSC", "SELSCb", "ClinSELSC")]#
+#
+#------------------ Steroide dose, immunosuppresseur, antimalarial ---------------##
+tmp <- adcmster[ITTFL=="Y" & AVISITN==1, ]#
+blsteroid <- tmp[AVISITN==1 & PARAMCD=="STERDOSE", .(SUBJID, AVAL)]#
+names(blsteroid)[2] <- "STERDOSE"#
+sterdose <- dcast(tmp, SUBJID~PARAMCD, value.var="AVALC")#
+sterdose[,STERDOSE:=as.numeric(STERDOSE)]#
+var.trns <- c("ANMAPRES", "IMMUPRES", "TFAIL")#
+sterdose[, (var.trns) := lapply(.SD, factor), .SDcols=var.trns]#
+sterdose[, STERDOSE:=NULL]#
+#
+#-------------------- anti ds dna -------------##
+dsd <- antids[ITTFL=="Y" & AVISITN==0.1, c("SUBJID", "AVAL")]#
+names(dsd) <- c("SUBJID", "ANTIDSDNA")#
+#
+#--------------------- IG -----------------##
+tmp <- adig[ITTFL=="Y" & AVISITN==1, ]#
+ig <- dcast(tmp, SUBJID~PARAMCD, value.var="AVAL")#
+#
+#-------------------- Treg -------------##
+treg <- adtreg[ITTFL=="Y" & AVISITN==1 & ATPTN==0, c("SUBJID", "AVAL")]#
+names(treg) <- c("SUBJID", "TREG")#
+#
+#------------------- FSS ------------------##
+FATIGVAS.tmp <- adqfss[ITTFL == "Y" & PARAMCD == "FATIGVAS" & AVISITN %in% c(1, 9, 13, 17), c("SUBJID", "AVISITN", "AVAL")]#
+FSSMEAN.tmp <- adqfss[ITTFL == "Y" & PARAMCD == "FSSMEAN" & AVISITN %in% c(1, 9, 13, 17), c("SUBJID", "AVISITN", "AVAL")]#
+FATIGVAS <- dcast(FATIGVAS.tmp, SUBJID~AVISITN, value.var="AVAL")#
+colnames(FATIGVAS) <- c("SUBJID", "FATIGVASW0", "FATIGVASW04", "FATIGVASW08", "FATIGVASW12")#
+FSSMEAN <- dcast(FSSMEAN.tmp, SUBJID~AVISITN, value.var="AVAL")#
+colnames(FSSMEAN) <- c("SUBJID", "FSSMEANW0", "FSSMEANW04", "FSSMEANW08", "FSSMEANW12")#
+#
+#--------------------- IG -----------------##
+tmp <- adqsbl[ITTFL=="Y" & AVISITN==1 & !(PARAMCD %in% c("BILAGA", "BILAGB", "BILAGIMP")), ]#
+bilag <- dcast(tmp, SUBJID~PARAMCD, value.var="AVALC")#
+var.trns <- c("CARSC", "CONSC", "GISC", "HAEMSC", "MUCSC", "MUSCSC", "NEUSC", "OPHSC", "RENSC")#
+bilag[, (var.trns):=lapply(.SD, factor), .SDcols=var.trns]#
+bilag[, TOTAL:=as.numeric(TOTAL)]#
+colnames(bilag)[colnames(bilag)=="TOTAL"] <- "BILAGTOTAL"#
+#
+#--------- BILAG A or B ------------------##
+bilagdim <- c("CONSC", "MUCSC", "NEUSC", "MUSCSC", "CARSC", "GISC", "OPHSC", "RENSC", "HAEMSC")#
+tmp <- adqsbl[ITTFL == "Y" & AVISITN == 1 & PARAMCD %in% bilagdim,]#
+bilaga <- tmp[, sum(AVALC=="A"), by="SUBJID"][, BILAG1A:=ifelse(V1<1, "N", "Y")][, V1:=NULL]#
+bilagb <- tmp[, sum(AVALC=="B"), by="SUBJID"][, BILAG2B:=ifelse(V1<2, "N", "Y")][, V1:=NULL]#
+bilag2 <- merge(bilaga, bilagb, by="SUBJID")#
+#
+#---------------- anti-DS DNA ----------------##
+antids$VISIT <- gsub(" \\(\\+1\\)", "", antids$VISIT)#
+#
+#---------------- lab CT ----------------##
+adlbct$VISIT <- gsub(" \\(\\+1\\)", "", adlbct$VISIT)#
+#
+#-------- concomed ----------------##
+out <- dcm[ATC3 == "ANTIMALARIALS" | CMTRT %in% c("Methotrexate", "Azathioprine") | CMDECOD == "Mycophenolate mofetil", ]#
+conco <- out[ITTFL=="Y" & ONGO=="Y", c("SUBJID", "CMTRT", "CMDECOD", "ATC3")]#
+conco <- conco[, CONCO:=ifelse(ATC3=="ANTIMALARIALS", ATC3, CMDECOD)]#
+cmed <- dcast(conco, SUBJID~CONCO, value.var="CONCO", fun.aggregate=length)#
+names(cmed) <- c("SUBJID", "Antimalarials", "Azathioprine", "Methotrexate", "Mycophenolate.mofetil")#
+cmed[, Antimalarials:=ifelse(Antimalarials==0, "No", "Yes")]#
+cmed[, Azathioprine:=ifelse(Azathioprine==0, "No", "Yes")]#
+cmed[, Methotrexate:=ifelse(Methotrexate==0, "No", "Yes")]#
+cmed[, Mycophenolate.mofetil:=ifelse(Mycophenolate.mofetil==0, "No", "Yes")]#
+rm(out)#
+#
+#--------------- vital sign ------------------##
+blvs <- dcast(advs[ITTFL=="Y" & AVISITN==1], SUBJID~PARAMCD, value.var="AVAL")#
+blvs1 <- dcast(advs[PARAMCD %in% c("OXYSAT", "HEIGHT") & AVISITN==0.1 & ITTFL=="Y"], SUBJID~PARAMCD, value.var="AVAL")#
+#
+#-------------------------------------------- combine -------------------------------------------------------------##
+mymerge <- function(x,y) merge(x, y, by="SUBJID", all.x=TRUE)#
+datainc <- Reduce(mymerge, list(baseline, resp, sterdose, dsd, ig, treg, bilag, subselsc, ssldat.cont, ssldat.cat, FATIGVAS, FSSMEAN, flare, flareV29, blvs, blvs1, medhis, Lupus, bilag2, cmed, blsteroid))#
+datainc[, Response := ifelse(SR4RS12=="Y", 1, 0)]#
+datainc[, Treatment := factor(ifelse(ARMN==1, "ILT-101", "Placebo"), levels=c("Placebo", "ILT-101"))]#
+datainc[, SELGR3 := ifelse(ClinSELSC > 10, ">10", "<=10")]#
+# update#
+datainc[, BLSteroidDose:=factor(ifelse(STERDOSE<=7.5, "None or <=7.5 mg", ">7.5 mg"), levels=c("None or <=7.5 mg", ">7.5 mg"))]#
+datainc[, SELGR2:=factor(ifelse(SELSC<10, "<10", ">=10"), levels=c("<10", ">=10"))]#
+datainc[, SELGR1:=factor(ifelse(SELSC<=10, "<=10", ">10"), levels=c("<=10", ">10"))]#
+datainc[, Responder:=factor(SR4RS12)]#
+datainc[, GEOGR1:=factor(GEOGR1, levels=c("Bulgaria", "Mexico", "Mauritius", "France", "Germany", "Romania", "Spain", "Countries with N < 5"))]#
+levels(datainc$GEOGR1) <- c("Bulgaria", "Mexico", "Mauritius", "France", "Germany", "Romania", "Spain", "Portugal")#
+for (i in c("Antimalarials", "Azathioprine", "Methotrexate", "Mycophenolate.mofetil", "Lupusnephritis")) {#
+    datainc[is.na(get(i)), (i):="No"]#
+  }#
+datainc[, RelevantPopulation := GEOGR1N !=1 & SELSC >= 6 & ClinSELSC >=4]#
+#
+datain <- datainc#
+source("~/PP/ClinicAssay/LUPIL2/prog/miniSAP_labels.R")
+tab <- compareGroups(Responder~ARM, data=datain[ARTH=="Y"])
+tab
+tabres <- createTable(tab)
+tabres
+tab <- compareGroups(ARM~Responder, data=datain[ARTH=="Y"])#
+tabres <- createTable(tab)
+tabres
+va
+va <- "ARTH"
+tab <- compareGroups(ARM~Responder, data=datain[get(va)=="Y"])
+tabres <- createTable(tab)
+tabres
+#------------------- Compare Groups response -----------##
+# ITT#
+for (va in c("ARTH", "RASH", "ALOP", "MU", "LOWCOM", "DNAINC")) {#
+    tab <- compareGroups(ARM~Responder, data=datain[get(va)=="Y"])#
+    tabres <- createTable(tab)#
+    export2xls(tabres, file=file.path(tab.output, paste0("itt_response_arm_", va,".xlsx")))#
+}#
+#
+# RITT#
+for (va in c("ARTH", "RASH", "ALOP", "MU", "LOWCOM", "DNAINC")) {#
+    tab <- compareGroups(ARM~Responder, data=datain[get(va)=="Y" & RelevantPopulation==TRUE])#
+    tabres <- createTable(tab)#
+    export2xls(tabres, file=file.path(tab.output, paste0("ritt_response_arm_", va,".xlsx")))#
+}
+adssl
+adsql
+adqssl
+adqssl$AVISITN
+unique(adqssl[, .(AVISITN, AVISIT)])
+85/30
+85/7
+57/7
+adqssl[ITTFL=="Y" & AVISITN==17]
+tt <- dcast(adqssl[ITTFL=="Y" & AVISITN==17], SUBJECT_REF+ARM~PARAMCD, value.var="AVALC")
+tt <- dcast(adqssl[ITTFL=="Y" & AVISITN==17], SUBJID+ARM~PARAMCD, value.var="AVALC")
+tt
+tab <- compareGroups(ARM~SEIZURE+PSYCHO+ORGBRAIN+VISDIST+CNERVE+LUPHEAD+CVA+VASC+ARTH+MYO+UCASTS+HEMAT+PRT+PYURIA+RASH+ ALOP+MU+PLEURISY+PERIC+LOWCOM+DNAINC+FEVER+THROM, data=tt)
+tabres <- createTable(tab)
+tabres
+unique(adqssl[, .(AVISITN, AVISIT)])
+24*7
+tab <- compareGroups(ARM~SEIZURE+PSYCHO+ORGBRAIN+VISDIST+CNERVE+LUPHEAD+CVA+VASC+ARTH+MYO+UCASTS+HEMAT+PRT+PYURIA+RASH+ ALOP+MU+PLEURISY+PERIC+LOWCOM+DNAINC+FEVER+THROM, data= datain)#
+tabres <- createTable(tab)#
+export2xls(tabres, file=file.path(tab.output, 'itt_inc_dimsledai.xlsx'))
+# ITT W12#
+tt <- dcast(adqssl[ITTFL=="Y" & AVISITN==17], SUBJID+ARM~PARAMCD, value.var="AVALC")#
+tab <- compareGroups(ARM~SEIZURE+PSYCHO+ORGBRAIN+VISDIST+CNERVE+LUPHEAD+CVA+VASC+ARTH+MYO+UCASTS+HEMAT+PRT+PYURIA+RASH+ ALOP+MU+PLEURISY+PERIC+LOWCOM+DNAINC+FEVER+THROM, data=tt)#
+tabres <- createTable(tab)#
+export2xls(tabres, file=file.path(tab.output, 'itt_w12_dimsledai.xlsx'))
+# ITT W24#
+tt <- dcast(adqssl[ITTFL=="Y" & AVISITN==29], SUBJID+ARM~PARAMCD, value.var="AVALC")#
+tab <- compareGroups(ARM~SEIZURE+PSYCHO+ORGBRAIN+VISDIST+CNERVE+LUPHEAD+CVA+VASC+ARTH+MYO+UCASTS+HEMAT+PRT+PYURIA+RASH+ ALOP+MU+PLEURISY+PERIC+LOWCOM+DNAINC+FEVER+THROM, data=tt)#
+tabres <- createTable(tab)#
+export2xls(tabres, file=file.path(tab.output, 'itt_w24_dimsledai.xlsx'))
+# RITT Inclusion#
+tab <- compareGroups(ARM~SEIZURE+PSYCHO+ORGBRAIN+VISDIST+CNERVE+LUPHEAD+CVA+VASC+ARTH+MYO+UCASTS+HEMAT+PRT+PYURIA+RASH+ ALOP+MU+PLEURISY+PERIC+LOWCOM+DNAINC+FEVER+THROM, data= datain[RelevantPopulation==TRUE])#
+tabres <- createTable(tab)#
+export2xls(tabres, file=file.path(tab.output, 'ritt_inc_dimsledai.xlsx'))
+# RIIT W12#
+tt <- dcast(adqssl[RITTFL=="Y" & AVISITN==17], SUBJID+ARM~PARAMCD, value.var="AVALC")#
+tab <- compareGroups(ARM~SEIZURE+PSYCHO+ORGBRAIN+VISDIST+CNERVE+LUPHEAD+CVA+VASC+ARTH+MYO+UCASTS+HEMAT+PRT+PYURIA+RASH+ ALOP+MU+PLEURISY+PERIC+LOWCOM+DNAINC+FEVER+THROM, data=tt)#
+tabres <- createTable(tab)#
+export2xls(tabres, file=file.path(tab.output, 'ritt_w12_dimsledai.xlsx'))
+# RIIT W24#
+tt <- dcast(adqssl[RITTFL=="Y" & AVISITN==29], SUBJID+ARM~PARAMCD, value.var="AVALC")#
+tab <- compareGroups(ARM~SEIZURE+PSYCHO+ORGBRAIN+VISDIST+CNERVE+LUPHEAD+CVA+VASC+ARTH+MYO+UCASTS+HEMAT+PRT+PYURIA+RASH+ ALOP+MU+PLEURISY+PERIC+LOWCOM+DNAINC+FEVER+THROM, data=tt)#
+tabres <- createTable(tab)#
+export2xls(tabres, file=file.path(tab.output, 'ritt_w24_dimsledai.xlsx'))
+?dcast
+tt <- dcast(adqssl[ITTFL=="Y" & AVISITN==17], SUBJID+ARM~PARAMCD, value.var="AVALC")#
+source("~/PP/ClinicAssay/LUPIL2PAPER/prog/tt_labels.R")#
+tab <- compareGroups(ARM~SEIZURE+PSYCHO+ORGBRAIN+VISDIST+CNERVE+LUPHEAD+CVA+VASC+ARTH+MYO+UCASTS+HEMAT+PRT+PYURIA+RASH+ ALOP+MU+PLEURISY+PERIC+LOWCOM+DNAINC+FEVER+THROM, data=tt)#
+tabres <- createTable(tab)#
+export2xls(tabres, file=file.path(tab.output, 'itt_w12_dimsledai.xlsx'))
+# ITT W24#
+tt <- dcast(adqssl[ITTFL=="Y" & AVISITN==29], SUBJID+ARM~PARAMCD, value.var="AVALC")#
+source("~/PP/ClinicAssay/LUPIL2PAPER/prog/tt_labels.R")#
+tab <- compareGroups(ARM~SEIZURE+PSYCHO+ORGBRAIN+VISDIST+CNERVE+LUPHEAD+CVA+VASC+ARTH+MYO+UCASTS+HEMAT+PRT+PYURIA+RASH+ ALOP+MU+PLEURISY+PERIC+LOWCOM+DNAINC+FEVER+THROM, data=tt)#
+tabres <- createTable(tab)#
+export2xls(tabres, file=file.path(tab.output, 'itt_w24_dimsledai.xlsx'))
+# RIIT W12#
+tt <- dcast(adqssl[RITTFL=="Y" & AVISITN==17], SUBJID+ARM~PARAMCD, value.var="AVALC")#
+source("~/PP/ClinicAssay/LUPIL2PAPER/prog/tt_labels.R")#
+tab <- compareGroups(ARM~SEIZURE+PSYCHO+ORGBRAIN+VISDIST+CNERVE+LUPHEAD+CVA+VASC+ARTH+MYO+UCASTS+HEMAT+PRT+PYURIA+RASH+ ALOP+MU+PLEURISY+PERIC+LOWCOM+DNAINC+FEVER+THROM, data=tt)#
+tabres <- createTable(tab)#
+export2xls(tabres, file=file.path(tab.output, 'ritt_w12_dimsledai.xlsx'))#
+#
+# RIIT W24#
+tt <- dcast(adqssl[RITTFL=="Y" & AVISITN==29], SUBJID+ARM~PARAMCD, value.var="AVALC")#
+source("~/PP/ClinicAssay/LUPIL2PAPER/prog/tt_labels.R")#
+tab <- compareGroups(ARM~SEIZURE+PSYCHO+ORGBRAIN+VISDIST+CNERVE+LUPHEAD+CVA+VASC+ARTH+MYO+UCASTS+HEMAT+PRT+PYURIA+RASH+ ALOP+MU+PLEURISY+PERIC+LOWCOM+DNAINC+FEVER+THROM, data=tt)#
+tabres <- createTable(tab)#
+export2xls(tabres, file=file.path(tab.output, 'ritt_w24_dimsledai.xlsx'))
+adqssl
+tt <- dcast(adqssl[RPPROTFL=="Y" & AVISITN==17], SUBJID+ARM~PARAMCD, value.var="AVALC")#
+source("~/PP/ClinicAssay/LUPIL2PAPER/prog/tt_labels.R")#
+tab <- compareGroups(ARM~SEIZURE+PSYCHO+ORGBRAIN+VISDIST+CNERVE+LUPHEAD+CVA+VASC+ARTH+MYO+UCASTS+HEMAT+PRT+PYURIA+RASH+ ALOP+MU+PLEURISY+PERIC+LOWCOM+DNAINC+FEVER+THROM, data=tt)#
+tabres <- createTable(tab)
+tabres
+adqssl
+adqssl$AVISITN
+unique(adqssl[,.(AVISITN, AVISIT)])
+adqssl$AVISITN
+adqssl
+#------------------- Compare Groups treatment -----------##
+for (pop in c("ITTFL", "RITTFL", "PPROTFL", "RPPROTFL")) {#
+    cat(pop, "\n")#
+    for (visit in c(1, 17, 29)) {#
+        cat(visit, "\n")#
+        tt <- dcast(adqssl[get(pop)=="Y" & AVISITN==visit], SUBJID+ARM~PARAMCD, value.var="AVALC")#
+        source("~/PP/ClinicAssay/LUPIL2PAPER/prog/tt_labels.R")#
+        tab <- compareGroups(ARM~SEIZURE+PSYCHO+ORGBRAIN+VISDIST+CNERVE+LUPHEAD+CVA+ #
+                                 VASC+ARTH+MYO+UCASTS+HEMAT+PRT+PYURIA+RASH+ALOP+MU+ #
+                                 PLEURISY+PERIC+LOWCOM+DNAINC+FEVER+THROM, data=tt)#
+        tabres <- createTable(tab)#
+        vis <- "inc"#
+        if (visit == 17) vis <- "w12"#
+        if (visit == 29) vis <- "w24"#
+        export2xls(tabres, file=file.path(tab.output, paste0(pop,"_",vis,"_dimsledai.xlsx")))#
+        rm(tt)#
+    }#
+}
+for (va in c("ARTH", "RASH", "ALOP", "MU", "LOWCOM", "DNAINC")) {#
+    tab <- compareGroups(ARM~Responder, data=datain[get(va)=="Y"])#
+    tabres <- createTable(tab)#
+    export2xls(tabres, file=file.path(tab.output, paste0("response_arm_itt_", va,".xlsx")))#
+}#
+#
+# RITT#
+for (va in c("ARTH", "RASH", "ALOP", "MU", "LOWCOM", "DNAINC")) {#
+    tab <- compareGroups(ARM~Responder, data=datain[get(va)=="Y" & RelevantPopulation==TRUE])#
+    tabres <- createTable(tab)#
+    export2xls(tabres, file=file.path(tab.output, paste0("response_arm_ritt", va,".xlsx")))#
+}
+q()
+BiocManager::install()
+library(RepSeq)
+exit
+data.table::update.dev.pkg()
+detach(RepSeq)
+detach("RepSeq")
+q()
+data.table::update.dev.pkg()
+q()
+library(RepSeq)
+library(RepSeqData)
+RepSeqData
+?RepSeqData
+q()
+setwd("~/PP/github/RepSeqData")#
+roxygenize(clean=TRUE)
+#-------- library -------##
+#install.packages("devtools")#
+library("devtools")#
+#devtools::install_github("klutometis/roxygen")#
+library(roxygen2)#
+# install.packages("sinew")#
+# Check that the usethis package is installed. If not:#
+#install.packages("usethis")
+setwd("~/PP/github/RepSeqData")#
+roxygenize(clean=TRUE)
+setwd("..")#
+#
+check(pkg="RepSeqData")#
+install("RepSeqData")
+setwd("~/PP/github/RepSeqData")
+usethis::use_gpl3_license()
+q()
